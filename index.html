@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Saúde - Faculdade</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f2f7fb;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .menu-item {
+            background: #007BFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .menu-item:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Saúde</h1>
+        <div class="menu">
+            <a href="cadastro_usuario.php" class="menu-item">Cadastrar Usuário</a>
+            <a href="cadastro_medico.php" class="menu-item">Cadastrar Médico</a>
+            <a href="cadastro_ubs.php" class="menu-item">Cadastrar UBS</a>
+            <a href="cadastro_consulta.php" class="menu-item">Agendar Consulta</a>
+            <a href="cadastro_medicamento.php" class="menu-item">Cadastrar Medicamento</a>
+            <a href="cadastro_vacinacao.php" class="menu-item">Registrar Vacinação</a>
+            <a href="cadastro_atendimento.php" class="menu-item">Registrar Atendimento</a>
+            <a href="cadastro_sala.php" class="menu-item">Cadastrar Sala</a>
+            <a href="cadastro_feedback.php" class="menu-item">Registrar Feedback</a>
+        </div>
+    </div>
+</body>
+</html>
