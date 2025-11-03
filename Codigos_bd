@@ -1,0 +1,148 @@
+BD para colar no phpmyadmin
+
+-- Cria o banco
+CREATE DATABASE IF NOT EXISTS app_saude CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE app_saude;
+
+-- 1. usuarios
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  telefone VARCHAR(20),
+  data_nascimento DATE
+);
+
+-- 2. medicos
+CREATE TABLE IF NOT EXISTS medicos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  crm VARCHAR(30) UNIQUE,
+  especialidade VARCHAR(80),
+  telefone VARCHAR(20)
+);
+
+-- 3. ubs
+CREATE TABLE IF NOT EXISTS ubs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  endereco VARCHAR(200),
+  bairro VARCHAR(80),
+  telefone VARCHAR(20)
+);
+
+-- 4. consultas
+CREATE TABLE IF NOT EXISTS consultas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT,
+  medico_id INT,
+  data_consulta DATETIME,
+  status VARCHAR(30),
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL,
+  FOREIGN KEY (medico_id) REFERENCES medicos(id) ON DELETE SET NULL
+);
+
+-- 5. medicamentos
+CREATE TABLE IF NOT EXISTS medicamentos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  principio_ativo VARCHAR(120),
+  laboratorio VARCHAR(120),
+  estoque INT DEFAULT 0
+);
+
+-- 6. prescricoes
+CREATE TABLE IF NOT EXISTS prescricoes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  consulta_id INT,
+  medicamento_id INT,
+  dosagem VARCHAR(80),
+  duracao VARCHAR(80),
+  FOREIGN KEY (consulta_id) REFERENCES consultas(id) ON DELETE CASCADE,
+  FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id) ON DELETE SET NULL
+);
+
+-- 7. vacinacoes
+CREATE TABLE IF NOT EXISTS vacinacoes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT,
+  vacina VARCHAR(120),
+  data_vacina DATE,
+  dose VARCHAR(50),
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- 8. atendimentos
+CREATE TABLE IF NOT EXISTS atendimentos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ubs_id INT,
+  usuario_id INT,
+  motivo VARCHAR(200),
+  data_atendimento DATETIME,
+  FOREIGN KEY (ubs_id) REFERENCES ubs(id) ON DELETE SET NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
+);
+
+-- 9. salas
+CREATE TABLE IF NOT EXISTS salas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ubs_id INT,
+  nome VARCHAR(80),
+  tipo VARCHAR(80),
+  capacidade INT,
+  FOREIGN KEY (ubs_id) REFERENCES ubs(id) ON DELETE CASCADE
+);
+
+-- 10. feedbacks
+CREATE TABLE IF NOT EXISTS feedbacks (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT,
+  ubs_id INT,
+  nota TINYINT,
+  comentario TEXT,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL,
+  FOREIGN KEY (ubs_id) REFERENCES ubs(id) ON DELETE SET NULL
+);
+
+-- INSERÇÕES: 20 valores únicos no total (sem repetições)
+INSERT INTO usuarios (nome, email, telefone, data_nascimento) VALUES
+('Ana Silva','ana.silva@email.com','(92) 99999-0001','1989-03-14'),
+('João Pereira','joao.pereira@email.com','(92) 99999-0002','1975-11-02'),
+('Mariana Costa','mariana.costa@email.com','(92) 99999-0003','1995-07-21');
+
+INSERT INTO medicos (nome, crm, especialidade, telefone) VALUES
+('Dr. Carlos Lima','CRM-AM-12345','Clínico Geral','(92) 98888-1111'),
+('Dra. Fernanda Rocha','CRM-AM-67890','Pediatria','(92) 98888-2222');
+
+INSERT INTO ubs (nome, endereco, bairro, telefone) VALUES
+('UBS Centro','Rua A, 123','Centro','(92) 3333-4444'),
+('UBS Aleixo','Av. B, 456','Aleixo','(92) 3333-5555');
+
+INSERT INTO consultas (usuario_id, medico_id, data_consulta, status) VALUES
+(1,1,'2025-10-27 08:30:00','agendada'),
+(2,2,'2025-11-03 10:00:00','confirmada');
+
+INSERT INTO medicamentos (nome, principio_ativo, laboratorio, estoque) VALUES
+('Paracetamol 500mg','Paracetamol','LabSaude','120'),
+('Dipirona 1g','Metamizol','Farmex','80');
+
+INSERT INTO prescricoes (consulta_id, medicamento_id, dosagem, duracao) VALUES
+(1,1,'1 comprimido a cada 8h','5 dias');
+
+INSERT INTO vacinacoes (usuario_id, vacina, data_vacina, dose) VALUES
+(1,'Influenza','2024-05-10','1ª dose'),
+(3,'COVID-19','2023-09-15','Dose de reforço');
+
+INSERT INTO atendimentos (ubs_id, usuario_id, motivo, data_atendimento) VALUES
+(1,1,'Dor de cabeça intensa','2025-10-20 09:15:00'),
+(2,3,'Consulta rotina','2025-07-12 14:00:00');
+
+INSERT INTO salas (ubs_id, nome, tipo, capacidade) VALUES
+(1,'Sala 1','Consultório','2'),
+(2,'Sala Pediatria','Pediatria','4');
+
+INSERT INTO feedbacks (usuario_id, ubs_id, nota, comentario) VALUES
+(1,1,5,'Atendimento rápido e cordial'),
+(2,2,4,'Melhorar limpeza nas salas');
+
+-- Fim do import
